@@ -75,7 +75,7 @@ class Status < ApplicationRecord
   end
 
   def title
-    content
+    reblog? ? "#{account.acct} shared a status by #{reblog.account.acct}" : "New status by #{account.acct}"
   end
 
   def hidden?
@@ -108,6 +108,10 @@ class Status < ApplicationRecord
     results  = results.reject { |status| filter_from_context?(status, account) }
 
     results
+  end
+
+  def non_sensitive_with_media?
+    !sensitive? && media_attachments.any?
   end
 
   class << self
